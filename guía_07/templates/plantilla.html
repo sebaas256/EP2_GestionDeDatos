@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Informe Gerencial - SmartRoute Logistics</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #333; line-height: 1.6; }
+        h1 { color: #8c1d40; border-bottom: 3px solid #8c1d40; padding-bottom: 10px; }
+        h2 { color: #a32249; margin-top: 30px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        h3 { color: #444; margin-top: 20px; }
+        .portada { text-align: center; margin-bottom: 40px; padding: 25px; background: #fcf4f6; border-radius: 8px; border: 1px solid #f2d6dc; }
+        .portada h1 { border: none; font-size: 28px; margin-bottom: 5px; color: #8c1d40; }
+        .portada h2 { border: none; color: #666; margin-top: 5px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
+        .kpi-card { background: #fcf4f6; padding: 15px; border-left: 4px solid #8c1d40; border-radius: 4px; }
+        .kpi-valor { font-size: 22px; font-weight: bold; color: #8c1d40; }
+        .kpi-label { font-size: 11px; color: #666; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; }
+        .hallazgo { background: #f9f9f9; padding: 15px; border-left: 4px solid #ff9800; margin: 15px 0; border-radius: 4px; }
+        .hallazgo h3 { margin-top: 0; color: #e65100; }
+        .limitacion { background: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; margin: 10px 0; border-radius: 4px; }
+        .limitacion-titulo { font-weight: bold; color: #856404; margin-right: 5px; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #8c1d40; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .pie { font-size: 11px; color: #999; margin-top: 40px; border-top: 1px solid #ddd; padding-top: 10px; text-align: center; }
+        img { max-width: 100%; margin: 10px 0; border: 1px solid #eee; border-radius: 4px; }
+        .metodologia { background: #e8f5e9; padding: 15px; border-radius: 4px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+<div class="portada">
+    <h1>INFORME GERENCIAL DE OPERACIONES</h1>
+    <h2>SmartRoute Logistics</h2>
+    <p><strong>Periodo:</strong> {{ periodo }}</p>
+    <p><strong>Fecha de generación:</strong> {{ fecha_generacion }}</p>
+    <p><strong>Versión:</strong> {{ version }}</p>
+    <p><strong>Equipo:</strong> {{ equipo }}</p>
+</div>
+
+<h2>1. Resumen Ejecutivo</h2>
+<p>El presente informe analiza la capacidad operativa y el cumplimiento de la demanda de despacho para SmartRoute Logistics durante el periodo {{ periodo }}.
+Su propósito es fundamentar la reasignación de carga entre hubs logísticos y optimizar la capacidad operativa durante campañas programadas a partir de los resultados calculados en el pipeline automatizado.</p>
+
+<h3>Indicadores Principales</h3>
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-label">Capacidad Total</div>
+        <div class="kpi-valor">{{ "%.0f"|format(kpis.capacidad_total) }} paq</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-label">Demanda Total</div>
+        <div class="kpi-valor">{{ "%.0f"|format(kpis.demanda_total) }} paq</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-label">Déficit Total</div>
+        <div class="kpi-valor" style="color: #d9534f;">{{ "%.0f"|format(kpis.deficit_total) }} paq</div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-label">Cobertura (%)</div>
+        <div class="kpi-valor">{{ "%.2f"|format(kpis.cobertura_pct) }}%</div>
+    </div>
+</div>
+
+<h2>2. Contexto y Metodología</h2>
+<div class="metodologia">
+    <p><strong>Fuentes utilizadas:</strong> Dataset operativo procesado (operacion_centros.csv), pipeline automatizado en Python y tablero de control Power BI.</p>
+    <p><strong>Proceso:</strong> Carga de datos → Agregación por hubs/regiones → Cálculo determinista de déficit (SUMX/MAX) → Generación de visualizaciones → Renderizado Jinja2.</p>
+    <p><strong>Filtros aplicados:</strong> Periodo {{ periodo }}, 9 centros de distribución (C01-C09), 3 regiones operativas.</p>
+</div>
+
+<h2>3. Resultados Generales</h2>
+
+<h3>3.1 Evolución Temporal: Demanda vs. Capacidad</h3>
+<img src="{{ ruta_tendencia }}" alt="Tendencia de operaciones">
+<p><strong>Lectura:</strong> La demanda presenta picos recurrentes que superan la capacidad instalada, generando periodos críticos de déficit en la red logística.</p>
+
+<h3>3.2 Déficit por Centro de Distribución (Hubs)</h3>
+<img src="{{ ruta_centros }}" alt="Déficit por Centro">
+<p><strong>Lectura:</strong> El centro <strong>{{ centro_top }}</strong> concentra el mayor nivel de déficit de despacho ({{ "%.0f"|format(deficit_centro_top) }} paquetes sin atender).</p>
+
+<h3>3.3 Déficit según Campaña Programada</h3>
+<img src="{{ ruta_campana }}" alt="Déficit por Campaña">
+<p><strong>Lectura:</strong> Las jornadas con campañas programadas incrementan significativamente la demanda sobrepasando la capacidad nominal de despacho.</p>
+
+<h2>4. Análisis por Región</h2>
+<img src="{{ ruta_region }}" alt="Déficit por región">
+<p><strong>Patrón observado:</strong> La región <strong>{{ region_top }}</strong> registra la mayor acumulación de déficit total ({{ "%.0f"|format(deficit_region_top) }} paquetes).
+La región Occidente mantiene el nivel más alto de cobertura operativa.</p>
+<p><strong>Lectura responsable:</strong> Existe una asimetría en la saturación de los centros. La capacidad excedente en una región no absorbe automáticamente el déficit de otra sin redistribución de flota.</p>
+
+<h2>5. Hallazgos Principales</h2>
+
+{% for h in hallazgos %}
+<div class="hallazgo">
+    <h3>{{ loop.index }}. {{ h.titulo }}</h3>
+    <p><strong>Evidencia:</strong> {{ h.evidencia }}</p>
+    <p><strong>Interpretación:</strong> {{ h.interpretacion }}</p>
+    <p><strong>Impacto:</strong> {{ h.impacto }}</p>
+    <p><strong>Decisión sugerida:</strong> {{ h.decision }}</p>
+    <p><em>Limitación: {{ h.limitacion }}</em></p>
+</div>
+{% endfor %}
+
+<h2>6. Recomendaciones</h2>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Acción</th>
+            <th>Prioridad</th>
+            <th>Responsable</th>
+            <th>Plazo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in recomendaciones %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ r.accion }}</td>
+            <td>{{ r.prioridad }}</td>
+            <td>{{ r.responsable }}</td>
+            <td>{{ r.plazo }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>7. Limitaciones del Análisis</h2>
+{% for l in limitaciones %}
+<div class="limitacion"><span class="limitacion-titulo">[!]</span> {{ l }}</div>
+{% endfor %}
+
+<h2>8. Conclusiones</h2>
+<p>El análisis del periodo {{ periodo }} evidencia una tasa global de cobertura del {{ "%.2f"|format(kpis.cobertura_pct) }}%.
+El hub {{ centro_top }} y la región {{ region_top }} requieren atención prioritaria mediante reasignación de flota y balanceo dinámico de carga para mitigar los rezagos de despacho durante campañas masivas.</p>
+
+<div class="pie">
+    <p>Informe generado automáticamente por el pipeline de reportería - SmartRoute Logistics</p>
+    <p>Proyecto Integrador - Parte 3: Reportería Gerencial Automatizada</p>
+</div>
+
+</body>
+</html>
