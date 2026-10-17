@@ -1,0 +1,33 @@
+{
+    "version": "1.0",
+    "fecha_generacion": "2026-10-17T16:32:29.403055",
+    "periodo_analizado": "05/01/2026 al 03/07/2026",
+    "fuente": "operacion_centros.csv",
+    "registros_entrada": 1620,
+    "sha256_fuente": "dddae40c4c62332c908d5bb9095d067e5eb4431514349c5f9641ac804c17e1db",
+    "fuentes_datos": [
+        "operacion_centros.csv",
+        "demanda_paquetes_diaria.csv"
+    ],
+    "filtros_aplicados": {
+        "periodo": "05/01/2026 al 03/07/2026",
+        "centros": "C01-C09",
+        "regiones": "Centro, Oriente, Occidente"
+    },
+    "kpis": {
+        "capacidad_total": 1577212.0,
+        "demanda_total": 1692646.0,
+        "deficit_total": 172314.0,
+        "cobertura_pct": 89.82
+    },
+    "archivos_generados": [
+        "informe.pdf",
+        "informe.docx",
+        "informe.html",
+        "plantilla.html",
+        "grafico.png",
+        "reporte_kpis.csv",
+        "metadatos.json"
+    ],
+    "generado_por": "generar_reporte.py"
+}
